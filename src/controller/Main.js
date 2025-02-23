@@ -6,14 +6,16 @@ import Lotto from "../domain/Lotto.js";
 
 export default class Main {
   async play() {
-    const lottoMachine = new LottoMachine(Lotto);
-    const purchasePrice = await Input.purchasePrice();
-    const publishedLottos = lottoMachine.publishLottos(purchasePrice);
-    Output.printLottos(publishedLottos);
-    await this.defineWinningRules(lottoMachine);
-    await this.printLottoResult(lottoMachine, purchasePrice);
-    const isRestart = await Input.restartLotto();
-    if (isRestart) await this.play();
+    while (true) {
+      const lottoMachine = new LottoMachine(Lotto);
+      const purchasePrice = await Input.purchasePrice();
+      const publishedLottos = lottoMachine.publishLottos(purchasePrice);
+      Output.printLottos(publishedLottos);
+      await this.defineWinningRules(lottoMachine);
+      await this.printLottoResult(lottoMachine, purchasePrice);
+      const isRestart = await Input.restartLotto();
+      if (!isRestart) return;
+    }
   }
 
   async defineWinningRules(lottoMachine) {
